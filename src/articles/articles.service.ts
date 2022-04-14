@@ -2,10 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 
+import * as admin from 'firebase-admin';
+
+admin.initializeApp();
+const firestore = admin.firestore();
+const collectionRef = firestore.collection('articles');
+
 @Injectable()
 export class ArticlesService {
-  create(createArticleDto: CreateArticleDto) {
-    return 'This action adds a new article';
+  async create(createArticleDto: CreateArticleDto) {
+    const res = await firestore.collection('cities').add({
+      name: 'Tokyo',
+      country: 'Japan',
+    });
+    return res;
   }
 
   findAll() {
