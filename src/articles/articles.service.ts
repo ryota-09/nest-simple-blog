@@ -62,7 +62,7 @@ export class ArticlesService {
   async update(id: string, updateArticleDto: UpdateArticleDto) {
     const docRef = await firestore.collection('articles');
     const targetDoc = await docRef.doc(id);
-    targetDoc.update({
+    await targetDoc.update({
       title: updateArticleDto.title,
       body: updateArticleDto.body,
       date: format(new Date(), 'yyyy-MM-dd HH:mm'),
@@ -75,7 +75,15 @@ export class ArticlesService {
     return updatedArticle;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} article`;
+  async remove(id: string) {
+    const docRef = await firestore.collection('articles');
+    const targetDoc = await docRef.doc(id);
+    await targetDoc.delete();
+    const snapshot = await targetDoc.get();
+    const deleteArticle = {
+      id: docRef,
+      ...snapshot.data(),
+    };
+    return deleteArticle;
   }
 }
