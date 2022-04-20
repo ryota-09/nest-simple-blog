@@ -14,8 +14,10 @@ const collectionRef = firestore.collection('articles');
 export class ArticlesService {
   async create(createArticleDto: CreateArticleDto) {
     const docRef = await collectionRef.add({
-      title: createArticleDto.title,
+      h1tag: createArticleDto.h1tag,
       body: createArticleDto.body,
+      imgPath: 'https://source.unsplash.com/random/800x600',
+      category: createArticleDto.category,
       date: format(new Date(), 'yyyy-MM-dd HH:mm'),
     });
     const snapshot = await docRef.get();
@@ -42,7 +44,13 @@ export class ArticlesService {
     const articleList: Array<Article> = snapshot.docs.map((doc) => {
       return {
         id: doc.id,
-        ...(doc.data() as { title: string; body: string; date: string }),
+        ...(doc.data() as {
+          h1tag: string;
+          body: Array<{ h2tag: string; text: string }>;
+          imgPath: string;
+          category: string;
+          date: string;
+        }),
       };
     });
     let targetArticle: Article = null;
@@ -50,8 +58,10 @@ export class ArticlesService {
       if (article.id === id) {
         targetArticle = {
           id: article.id,
-          title: article.title,
+          h1tag: article.h1tag,
           body: article.body,
+          imgPath: article.imgPath,
+          category: article.category,
           date: article.date,
         };
       }
@@ -63,8 +73,10 @@ export class ArticlesService {
     const docRef = await firestore.collection('articles');
     const targetDoc = await docRef.doc(id);
     await targetDoc.update({
-      title: updateArticleDto.title,
+      h1tag: updateArticleDto.h1tag,
       body: updateArticleDto.body,
+      imgPath: 'https://source.unsplash.com/random/800x600',
+      category: updateArticleDto.category,
       date: format(new Date(), 'yyyy-MM-dd HH:mm'),
     });
     const snapshot = await targetDoc.get();
