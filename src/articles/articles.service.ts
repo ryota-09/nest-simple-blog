@@ -15,10 +15,11 @@ export class ArticlesService {
   async create(createArticleDto: CreateArticleDto) {
     const docRef = await collectionRef.add({
       h1tag: createArticleDto.h1tag,
+      lead: createArticleDto.lead,
       body: createArticleDto.body,
       imgPath: 'https://source.unsplash.com/random/800x600',
       category: createArticleDto.category,
-      date: format(new Date(), 'yyyy-MM-dd HH:mm'),
+      date: format(new Date(), 'yyyy-MM-dd'),
     });
     const snapshot = await docRef.get();
     const newArticle = {
@@ -46,6 +47,7 @@ export class ArticlesService {
         id: doc.id,
         ...(doc.data() as {
           h1tag: string;
+          lead: string;
           body: Array<{ h2tag: string; text: string }>;
           imgPath: string;
           category: string;
@@ -59,6 +61,7 @@ export class ArticlesService {
         targetArticle = {
           id: article.id,
           h1tag: article.h1tag,
+          lead: article.lead,
           body: article.body,
           imgPath: article.imgPath,
           category: article.category,
@@ -74,10 +77,11 @@ export class ArticlesService {
     const targetDoc = await docRef.doc(id);
     await targetDoc.update({
       h1tag: updateArticleDto.h1tag,
+      lead: updateArticleDto.lead,
       body: updateArticleDto.body,
       imgPath: 'https://source.unsplash.com/random/800x600',
       category: updateArticleDto.category,
-      date: format(new Date(), 'yyyy-MM-dd HH:mm'),
+      date: format(new Date(), 'yyyy-MM-dd'),
     });
     const snapshot = await targetDoc.get();
     const updatedArticle = {
